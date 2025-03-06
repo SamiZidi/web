@@ -63,19 +63,21 @@
       }
     })
     .then(response => response.json())  // Convert response to JSON
+
 .then(data => {
   thisForm.querySelector('.loading').classList.remove('d-block');
-  if (data.ok) {  // Formspree returns { "ok": true } on success
+  if (data.ok) {  // Check if Formspree response contains "ok": true
     thisForm.querySelector('.sent-message').classList.add('d-block');
     thisForm.reset();
   } else {
     throw new Error(data.error || 'Form submission failed.');
   }
 })
+.catch((error) => {
+  displayError(thisForm, error);
+});
 
-    .catch((error) => {
-      displayError(thisForm, error);
-    });
+ 
   }
 
   function displayError(thisForm, error) {
