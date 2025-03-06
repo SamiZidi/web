@@ -62,15 +62,17 @@
         throw new Error(`${response.status} ${response.statusText} ${response.url}`); 
       }
     })
-    .then(data => {
-      thisForm.querySelector('.loading').classList.remove('d-block');
-      if (data.trim() == 'OK') {
-        thisForm.querySelector('.sent-message').classList.add('d-block');
-        thisForm.reset(); 
-      } else {
-        throw new Error(data ? data : 'Form submission failed and no error message returned from: ' + action); 
-      }
-    })
+    .then(response => response.json())  // Convert response to JSON
+.then(data => {
+  thisForm.querySelector('.loading').classList.remove('d-block');
+  if (data.ok) {  // Formspree returns { "ok": true } on success
+    thisForm.querySelector('.sent-message').classList.add('d-block');
+    thisForm.reset();
+  } else {
+    throw new Error(data.error || 'Form submission failed.');
+  }
+})
+
     .catch((error) => {
       displayError(thisForm, error);
     });
